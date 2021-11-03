@@ -1,4 +1,5 @@
 import time
+import random
 
 
 FLAG_TYPE_NO_FLAG = 0  # 아무런 표시도 되어있지 않음
@@ -21,7 +22,24 @@ class GameBoard:
 
     # w x h 크기의 게임판을 만들고, mines개수의 지뢰를 랜덤하게 배치
     def new_game(self, w: int, h: int, mines: int):
-        raise NotImplementedError
+        self.mines = []
+        self.opened = []
+        self.flags = []
+        
+        for i in range(h):
+            self.mines.append([])
+            self.opened.append([])
+            self.flags.append([])
+            for j in range(w):
+                self.mines[i].append(False)
+                self.opened[i].append(False)
+                self.flags[i].append(FLAG_TYPE_NO_FLAG)
+        
+        coords = [(x, y) for x in range(w) for y in range(h)]
+        for x, y in random.sample(coords, k=mines):
+            self.mines[y][x] = True
+        
+        self.start_time = time.time()
     
     # pickle을 이용해 이 게임판을 문자열로 저장해 리턴
     def serialize_game(self):
@@ -104,3 +122,7 @@ class GameBoard:
 
 if __name__ == '__main__':
     game = GameBoard()
+    game.new_game(7, 5, 0)
+    game.mines[0][0] = True
+    game.mines[1][1] = True
+    game.mines[2][2] = True
