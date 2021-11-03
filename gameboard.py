@@ -71,7 +71,13 @@ class GameBoard:
     
     # 남아있는 지뢰 개수를 셈 (잘못 표기한것도 포함)
     def count_remaining_mine(self):
-        raise NotImplementedError
+        mineCount = 0
+        flagCount = 0
+        for i in self.mines:
+            mineCount += i.count(True)
+        for i in self.flags:
+            flagCount += i.count(True)
+        return mineCount - flagCount
     
     # 제대로 표기한 지뢰 개수를 셈
     def count_flagged_mine(self):
