@@ -1,3 +1,3 @@
-## Mineswepper Qt
+## Minesweeper Qt
 
 국민대학교 소프트웨어학부 1학년 AD 프로젝트의 일환으로 지뢰찾기 게임을 Qt로 구현합니다.
