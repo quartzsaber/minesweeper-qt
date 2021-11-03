@@ -8,6 +8,7 @@ FLAG_TYPE_BLOWN_UP_MINE = 3  # 폭발해버린 지뢰. cycle_cell_flag는 이 �
 FLAG_TYPE_DISPLAYED_MINE = 4  # 싱글플레이 게임이 끝나서 나타난 지뢰. cycle_cell_flag는 이 깃발을 사용하지 않음
 
 
+
 # 지뢰찾기 게임판
 class GameBoard:
     def __init__(self):
@@ -28,7 +29,8 @@ class GameBoard:
     
     # pickle을 이용해 이 게임판을 불러옴
     def deserialize_game(self):
-        raise NotImplementedError
+        raise NotImplement
+        edError
     
     # 해당 칸의 플래그 정보를 바꿈
     def cycle_cell_flag(self, x: int, y: int):
@@ -53,11 +55,15 @@ class GameBoard:
     # 남아있는 지뢰 개수를 셈 (잘못 표기한것도 포함)
     def count_remaining_mine(self):
         raise NotImplementedError
-    
     # 제대로 표기한 지뢰 개수를 셈
     def count_flagged_mine(self):
-        raise NotImplementedError
-    
+        count = 0
+        for i in range(0, len(flags)):
+                for j in range(0, len(flags[i])):
+                    if self.flags[i][j] == FLAG_TYPE_QUESTION and self.mines[i][j] == True:
+                        count += 1
+        return count
+
     # 게임에서 승리했는지 확인 (게임이 끝났으면 True)
     def check_finished(self):
         return count_flagged_mine() == 0
