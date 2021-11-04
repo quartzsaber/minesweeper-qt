@@ -56,12 +56,12 @@ class GameBoard:
     # 해당 칸을 엶 (좌클릭 함)
     # 해당 칸에 지뢰가 있었을 경우 True를 리턴
     # 지뢰로 표시해놓은 칸은 무시
-    def mark_cell(self, x: int, y: int):
+    def open_cell(self, x: int, y: int):
         raise NotImplementedError
     
     # 주변 3x3 칸을 엶
     # 지뢰로 표시해놓은 칸은 무시
-    def mark_cell_adjacent(self, x: int, y: int):
+    def open_cell_adjacent(self, x: int, y: int):
         raise NotImplementedError
     
     # 싱글플레이 모드에서 게임을 끝낼때 부르는 함수
