@@ -2,12 +2,12 @@ import time
 import random
 
 
-FLAG_TYPE_NO_FLAG = 0  # 아무런 표시도 되어있지 않음
-FLAG_TYPE_MINE = 1  # 지뢰임을 나타내는 깃발
-FLAG_TYPE_QUESTION = 2  # 물음표 표시
-FLAG_TYPE_BLOWN_UP_MINE = 3  # 폭발해버린 지뢰. cycle_cell_flag는 이 깃발을 사용하지 않음
-FLAG_TYPE_DISPLAYED_MINE = 4  # 싱글플레이 게임이 끝나서 나타난 지뢰. cycle_cell_flag는 이 깃발을 사용하지 않음
-
+IMAGE_NONE = 0  # 특별한 표시가 없음. 닫혔으면 닫힌 모습이, 열렸으면 숫자 혹은 빈칸이 나타남
+IMAGE_FLAG = 1  # 지뢰임을 나타내는 깃발
+IMAGE_QUESTION = 2  # 물음표 표시. cycle_cell_flag는 여기까지 3개의 이미지만 사용함
+IMAGE_BLOWN_UP_MINE = 3  # 폭발해버린 지뢰. 빨간 배경의 지뢰 모습
+IMAGE_MISSED_MINE = 4  # 싱글플레이 게임이 끝날때 나타나는, 미처 지뢰라고 표기하지 못했던 지뢰. 회색 배경의 지뢰 모습
+IMAGE_WRONG_FLAG = 5  # 싱글플레이 게임이 끝날때 나타나는, 지뢰가 아닌데 지뢰라고 표기한 곳. 빨간 배경의 깃발 모습
 
 
 # 지뢰찾기 게임판
@@ -17,7 +17,7 @@ class GameBoard:
         # 모든 2차원 리스트는 arr[y][x] 처럼 접근함
         self.mines = [[]]  # 2차원 리스트, 지뢰인 칸은 True, 아니면 False
         self.opened = [[]]  # 2차원 리스트, 열린 칸은 True, 아니면 False
-        self.flags = [[]]  # 2차원 리스트, FLAG_TYPE_* 으로 각 칸을 표시함
+        self.images = [[]]  # 2차원 리스트, IMAGE_* 으로 각 칸을 표시함
         self.start_time = 0  # 시작했을때의 시간. 파이썬에 내장된 time.time() 함수 참고
 
     # w x h 크기의 게임판을 만들고, mines개수의 지뢰를 랜덤하게 배치
@@ -29,11 +29,11 @@ class GameBoard:
         for i in range(h):
             self.mines.append([])
             self.opened.append([])
-            self.flags.append([])
+            self.images.append([])
             for j in range(w):
                 self.mines[i].append(False)
                 self.opened[i].append(False)
-                self.flags[i].append(FLAG_TYPE_NO_FLAG)
+                self.images[i].append(IMAGE_NONE)
         
         coords = [(x, y) for x in range(w) for y in range(h)]
         for x, y in random.sample(coords, k=mines):
@@ -50,8 +50,8 @@ class GameBoard:
         raise NotImplementedError
     
     # 해당 칸의 플래그 정보를 바꿈
-    def cycle_cell_flag(self, x: int, y: int):
-        self.flags[y][x] = (self.flags[y][x] + 1) % 3
+    def cycle_cell_image(self, x: int, y: int):
+        self.images[y][x] = (self.images[y][x] + 1) % 3
     
     # 해당 칸을 엶 (좌클릭 함)
     # 해당 칸에 지뢰가 있었을 경우 True를 리턴
@@ -75,16 +75,16 @@ class GameBoard:
         flagCount = 0
         for i in self.mines:
             mineCount += i.count(True)
-        for i in self.flags:
+        for i in self.images:
             flagCount += i.count(True)
         return mineCount - flagCount
     
     # 제대로 표기한 지뢰 개수를 셈
     def count_flagged_mine(self):
         count = 0
-        for i in range(0, len(self.flags)):
-            for j in range(0, len(self.flags[i])):
-                if self.flags[i][j] == FLAG_TYPE_MINE and self.mines[i][j]:
+        for i in range(0, len(self.images)):
+            for j in range(0, len(self.images[i])):
+                if self.images[i][j] == IMAGE_FLAG and self.mines[i][j]:
                     count += 1
         return count
 
@@ -103,9 +103,9 @@ class GameBoard:
         raise NotImplementedError
     
     # 해당 칸의 깃발 정보를 가져옴
-    # (cycle_cell_flag 함수와 FLAG_TYPE_* 변수 참고)
-    def get_cell_flag(self, x: int, y: int):
-        return self.flags[y][x]
+    # (cycle_cell_image 함수와 IMAGE_* 변수 참고)
+    def get_cell_image(self, x: int, y: int):
+        return self.images[y][x]
     
     # 게임을 시작하고 몇 초가 지났는지 리턴
     def get_playtime(self):
