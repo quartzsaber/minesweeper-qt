@@ -92,17 +92,14 @@ class GameBoard:
     def check_finished(self):
         raise NotImplementedError
     
-    # 해당 칸이 좌클릭이나 우클릭 할 수 있다면 True
-    def check_cell_clickable(self, x: int, y: int):
-        raise NotImplementedError
-    
     # 해당 칸에 써있는 숫자를 가져옴
-    # 아직 열리지 않은 칸일 경우 False
-    # 열렸지만 빈 칸일경우 0
+    # 아직 열리지 않은 칸일 경우 None
+    # 열렸지만 주변에 지뢰가 없을 경우 0
+    # 열렸지만 이미지가 표시중일때는 고려하지 않음 (어차피 이미지가 표시되어야 함)
     def get_cell_text(self, x: int, y: int):
         raise NotImplementedError
     
-    # 해당 칸의 깃발 정보를 가져옴
+    # 해당 칸의 이미지 정보를 가져옴
     # (cycle_cell_image 함수와 IMAGE_* 변수 참고)
     def get_cell_image(self, x: int, y: int):
         return self.images[y][x]
@@ -115,12 +112,13 @@ class GameBoard:
     # 여기부터 아래에 있는 함수들은 이 클래스 내부에서 사용하기 위해 만들어진 함수임
     # ===========================================
     
+    # 해당 칸 주변(총 9칸)의 지뢰 개수를 세서 int형으로 리턴
+    def count_adjacent_mine(self, x: int, y: int):
+        raise NotImplementedError
+    
     # 주변에 지뢰가 없는 모든 인접한 칸을 찾는 함수
+    # 조금 더 엄밀히는, 주변에 지뢰가 없는 모든 칸의 인접한 칸을 찾는 함수
     # for x, y in self.iter_empty_adjacent(...) 처럼 사용
     def iter_empty_adjacent(self, x: int, y: int):
         raise NotImplementedError
         yield (0, 0)
-    
-    # 해당 칸 주변의 지뢰 개수를 세서 int형으로 리턴
-    def count_adjacent_mine(self, x: int, y: int):
-        raise NotImplementedError
