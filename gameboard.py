@@ -51,7 +51,7 @@ class GameBoard:
     
     # 해당 칸의 플래그 정보를 바꿈
     def cycle_cell_flag(self, x: int, y: int):
-        raise NotImplementedError
+        self.flags[y][x] = (self.flags[y][x] + 1) % 3
     
     # 해당 칸을 엶 (좌클릭 함)
     # 해당 칸에 지뢰가 있었을 경우 True를 리턴
@@ -105,7 +105,7 @@ class GameBoard:
     # 해당 칸의 깃발 정보를 가져옴
     # (cycle_cell_flag 함수와 FLAG_TYPE_* 변수 참고)
     def get_cell_flag(self, x: int, y: int):
-        raise NotImplementedError
+        return self.flags[y][x]
     
     # 게임을 시작하고 몇 초가 지났는지 리턴
     def get_playtime(self):
@@ -124,11 +124,3 @@ class GameBoard:
     # 해당 칸 주변의 지뢰 개수를 세서 int형으로 리턴
     def count_adjacent_mine(self, x: int, y: int):
         raise NotImplementedError
-
-
-if __name__ == '__main__':
-    game = GameBoard()
-    game.new_game(7, 5, 0)
-    game.mines[0][0] = True
-    game.mines[1][1] = True
-    game.mines[2][2] = True
