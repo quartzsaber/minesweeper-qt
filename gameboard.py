@@ -90,7 +90,7 @@ class GameBoard:
 
     # 게임에서 승리했는지 확인 (게임이 끝났으면 True)
     def check_finished(self):
-        return count_flagged_mine() == 0
+        raise NotImplementedError
     
     # 해당 칸이 좌클릭이나 우클릭 할 수 있다면 True
     def check_cell_clickable(self, x: int, y: int):
