@@ -25,7 +25,7 @@ class GameBoard:
     def new_game(self, w: int, h: int, mines: int):
         self.mines = []
         self.opened = []
-        self.flags = []
+        self.images = []
         
         for i in range(h):
             self.mines.append([])
