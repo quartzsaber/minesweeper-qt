@@ -48,7 +48,7 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_BLOWN_UP_MINE)
         
         self.game.images[2][2] = IMAGE_BLOWN_UP_MINE
-        self.assertEqual(self.game.open_cell(1, 1), False)
+        self.assertEqual(self.game.open_cell(2, 2), False)
     
     def test_open_cell_adjacent(self):
         self.game.cycle_cell_image(0, 0)
@@ -72,14 +72,11 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_BLOWN_UP_MINE)
         self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_QUESTION)
         
-        for i in [3, 4, 5]:
-            for j in [0, 1, 2]:
-                self.assertEqual(self.game.get_cell_text(i, j), None)
         self.game.open_cell_adjacent(4, 1)
         for i in [3, 4, 5]:
             for j in [0, 1, 2]:
                 self.assertTrue(self.game.get_cell_text(i, j) >= 0)
-        self.assertEqual(self.game.get_cell_text(5, 3), None)
+        self.assertTrue(self.game.get_cell_text(6, 0) == 0)
     
     def test_count_remaining_mine(self):
         self.assertEqual(self.game.count_remaining_mine(), 3)
