@@ -142,10 +142,10 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.mines[2][5] = True
         self.game.mines[2][6] = True
         
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 2)]), 0)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 2)]), 1)
         self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 3)]), 2)
         self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 0)]), 0)
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(2, 0)]), 0)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(2, 0)]), 1)
         self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(3, 0)]), 4)
         self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(6, 4)]), 3)
     
