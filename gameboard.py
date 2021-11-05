@@ -1,5 +1,6 @@
 import time
 import random
+import pickle
 
 
 IMAGE_NONE = 0  # 특별한 표시가 없음. 닫혔으면 닫힌 모습이, 열렸으면 숫자 혹은 빈칸이 나타남
@@ -43,11 +44,15 @@ class GameBoard:
     
     # pickle을 이용해 이 게임판을 문자열로 저장해 리턴
     def serialize_game(self):
-        raise NotImplementedError
+        return pickle.dumps(self)
     
     # pickle을 이용해 이 게임판을 불러옴
-    def deserialize_game(self):
-        raise NotImplementedError
+    def deserialize_game(self, data):
+        game = pickle.loads(data)
+        self.mines = game.mines
+        self.opened = game.opened
+        self.images = game.images
+        self.start_time = game.start_time
     
     # 해당 칸의 플래그 정보를 바꿈
     def cycle_cell_image(self, x: int, y: int):
