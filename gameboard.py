@@ -2,6 +2,8 @@ import time
 import random
 import pickle
 
+from collections import deque
+
 
 IMAGE_NONE = 0  # 특별한 표시가 없음. 닫혔으면 닫힌 모습이, 열렸으면 숫자 혹은 빈칸이 나타남
 IMAGE_FLAG = 1  # 지뢰임을 나타내는 깃발
@@ -125,5 +127,21 @@ class GameBoard:
     # 조금 더 엄밀히는, 주변에 지뢰가 없는 모든 칸의 인접한 칸을 찾는 함수
     # for x, y in self.iter_empty_adjacent(...) 처럼 사용
     def iter_empty_adjacent(self, x: int, y: int):
-        raise NotImplementedError
-        yield (0, 0)
+        visited = set()
+        bfs = deque([(x, y)])
+        
+        while len(bfs) > 0:
+            cx, cy = bfs.popleft()
+            if cy < 0 or len(self.mines) <= cy or cx < 0 or len(self.mines[cy]) <= cx:
+                continue
+            if (cx, cy) in visited:
+                continue
+            
+            visited.add((cx, cy))
+            yield (cx, cy)
+            
+            if self.count_adjacent_mine(cx, cy) == 0:
+                for i in [-1, 0, 1]:
+                    for j in [-1, 0, 1]:
+                        if (cx + i, cy + j) not in visited:
+                            bfs.append((cx + i, cy + j))
