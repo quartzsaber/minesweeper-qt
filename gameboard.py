@@ -121,7 +121,15 @@ class GameBoard:
     
     # 해당 칸 주변(총 9칸)의 지뢰 개수를 세서 int형으로 리턴
     def count_adjacent_mine(self, x: int, y: int):
-        raise NotImplementedError
+        count = 0
+        for j in (y-1, y+2):
+            for i in (x-1, x+2):
+                try:
+                    if self.mines[j][i] == True:
+                        count += 1
+                except IndexError:
+                    continue
+        return count
     
     # 주변에 지뢰가 없는 모든 인접한 칸을 찾는 함수
     # 조금 더 엄밀히는, 주변에 지뢰가 없는 모든 칸의 인접한 칸을 찾는 함수
