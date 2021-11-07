@@ -146,6 +146,20 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.count_adjacent_mine(5, 4), 1)
         self.assertEqual(self.game.count_adjacent_mine(6, 3), 1)
     
+    def test_iter_empty_adjacent(self):
+        self.game.mines[3][2] = True
+        self.game.mines[4][2] = True
+        self.game.mines[2][4] = True
+        self.game.mines[2][5] = True
+        self.game.mines[2][6] = True
+        
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 2)]), 1)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 3)]), 6)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 0)]), 1)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(2, 0)]), 1)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(3, 0)]), 10)
+        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(6, 4)]), 8)
+    
 
 if __name__ == '__main__':
     unittest.main()
