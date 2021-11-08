@@ -61,8 +61,8 @@ class GameBoard:
         self.images[y][x] = (self.images[y][x] + 1) % 3
     
     # 해당 칸을 엶 (좌클릭 함)
-    # 해당 칸은 열리고, 만약 빈 칸일 경우 그 주변 빈 칸도 같이 열림
-    # 열린 칸에 지뢰가 있었을 경우 True를 리턴
+    # 해당 칸은 열리고, 만약 빈 칸일 경우 그 주변 빈 칸도 같이 열림 (self.opened가 수정됨)
+    # 열린 칸에 지뢰가 있었을 경우 True를 리턴하고 해당 칸의 이미지는 IMAGE_BLOWN_UP_MINE으로 바뀜
     # 단, 지뢰로 표시해놓은 칸은 무시
     def open_cell(self, x: int, y: int):
         if self.images[x][y] == 0 and self.mines[x][y]:
