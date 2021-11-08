@@ -61,8 +61,9 @@ class GameBoard:
         self.images[y][x] = (self.images[y][x] + 1) % 3
     
     # 해당 칸을 엶 (좌클릭 함)
-    # 해당 칸에 지뢰가 있었을 경우 True를 리턴
-    # 지뢰로 표시해놓은 칸은 무시
+    # 해당 칸은 열리고, 만약 빈 칸일 경우 그 주변 빈 칸도 같이 열림
+    # 열린 칸에 지뢰가 있었을 경우 True를 리턴
+    # 단, 지뢰로 표시해놓은 칸은 무시
     def open_cell(self, x: int, y: int):
         if self.images[x][y] == 0 and self.mines[x][y]:
             return True
@@ -70,6 +71,8 @@ class GameBoard:
     
     # 주변 3x3 칸을 엶
     # 지뢰로 표시해놓은 칸은 무시
+    # 열린 칸중에 하나라도 지뢰라면 True를 리턴
+    # 단, 지뢰로 표시해놓은 칸은 무시
     def open_cell_adjacent(self, x: int, y: int):
         for i in range(x-1, x+1):
             for j in range(y-1, y+1):
