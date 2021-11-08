@@ -77,6 +77,8 @@ class GameBoardTestCase(unittest.TestCase):
             for j in [0, 1, 2]:
                 self.assertTrue(self.game.get_cell_text(i, j) >= 0)
         self.assertTrue(self.game.get_cell_text(6, 0) == 0)
+        
+        self.assertEqual(self.game.open_cell_adjacent(6, 4), False)
     
     def test_count_remaining_mine(self):
         self.assertEqual(self.game.count_remaining_mine(), 3)
