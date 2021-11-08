@@ -133,20 +133,12 @@ class GameBoard:
     # 해당 칸 주변(총 9칸)의 지뢰 개수를 세서 int형으로 리턴
     def count_adjacent_mine(self, x: int, y: int):
         count = 0
-        for j in (y-1, y+2):
-            for i in (x-1, x+2):
-        ynum = []
-        xnum = []
         for i in range(y-1, y+2):
-            if i>=0 and i<len(self.mines):
-                ynum.append(i)
-        for i in range(x-1, x+2):
-            if i>=0 and i<len(self.mines[0]):
-                xnum.append(i)     
-        for j in ynum:
-            for i in xnum:
-                if self.mines[j][i] == True:
-                    count += 1
+            if 0 <= i < len(self.mines):
+                for j in range(x-1, x+2):
+                    if 0 <= j < len(self.mines[i]):
+                        if self.mines[i][j] == True:
+                            count += 1
         return count
     
     # 주변에 지뢰가 없는 모든 인접한 칸을 찾는 함수
