@@ -80,6 +80,7 @@ class GameBoard:
     
     # 싱글플레이 모드에서 게임을 끝낼때 부르는 함수
     # 모든 지뢰의 위치를 공개함
+    # IMAGE_* 에 붙어있는 설명을 읽기 바람
     def finish_game(self):
         x = 0
         for i in self.mines:
@@ -110,6 +111,7 @@ class GameBoard:
         return count
 
     # 게임에서 승리했는지 확인 (게임이 끝났으면 True)
+    # 지뢰인 칸을 제외하고 모든 칸을 열었을 때가 승리 조건임
     def check_finished(self):
         raise NotImplementedError
     

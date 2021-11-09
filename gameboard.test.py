@@ -80,6 +80,28 @@ class GameBoardTestCase(unittest.TestCase):
         
         self.assertEqual(self.game.open_cell_adjacent(6, 4), False)
     
+    def test_finish_game(self):
+        self.game.mines[3][3] = True
+        
+        self.game.cycle_cell_image(0, 0)
+        self.game.cycle_cell_image(0, 1)
+        self.game.cycle_cell_image(2, 2)
+        self.game.cycle_cell_image(2, 2)
+        
+        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.get_cell_image(0, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_NONE)
+        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_QUESTION)
+        
+        self.assertEqual(self.game.open_cell(3, 3), True)
+        self.game.finish_game()
+        
+        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.get_cell_image(0, 1), IMAGE_WRONG_FLAG)
+        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_MISSED_MINE)
+        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_MISSED_MINE)
+        self.assertEqual(self.game.get_cell_image(3, 3), IMAGE_BLOWN_UP_MINE)
+    
     def test_count_remaining_mine(self):
         self.assertEqual(self.game.count_remaining_mine(), 3)
         self.game.cycle_cell_image(0, 0)
