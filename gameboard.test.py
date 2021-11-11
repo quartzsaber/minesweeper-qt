@@ -69,8 +69,8 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycle_cell_image(0, 0)
         self.assertEqual(self.game.open_cell_adjacent(1, 1), True)
         self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_BLOWN_UP_MINE)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_BLOWN_UP_MINE)
-        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_QUESTION)
+        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_BLOWN_UP_MINE)
         
         self.game.open_cell_adjacent(4, 1)
         for i in [3, 4, 5]:

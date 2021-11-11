@@ -65,8 +65,13 @@ class GameBoard:
     # 열린 칸에 지뢰가 있었을 경우 True를 리턴하고 해당 칸의 이미지는 IMAGE_BLOWN_UP_MINE으로 바뀜
     # 단, 지뢰로 표시해놓은 칸은 무시
     def open_cell(self, x: int, y: int):
-        if self.images[x][y] == 0 and self.mines[x][y]:
-            return True
+        if not self.opened[x][y]:
+            if (self.images[x][y] == IMAGE_NONE or self.images[x][y] == IMAGE_QUESTION) and self.mines[x][y]:
+                self.images[x][y] = IMAGE_BLOWN_UP_MINE
+                return True
+            elif (self.images[x][y] == IMAGE_NONE or self.images[x][y] == IMAGE_QUESTION) and not self.mines[x][y]:
+                for i, j in self.iter_empty_adjacent(x, y):
+                    self.opened[j][i] = True
         return False
     
     # 주변 3x3 칸을 엶
@@ -74,22 +79,33 @@ class GameBoard:
     # 열린 칸중에 하나라도 지뢰라면 True를 리턴
     # 단, 지뢰로 표시해놓은 칸은 무시
     def open_cell_adjacent(self, x: int, y: int):
-        for i in range(x-1, x+1):
-            for j in range(y-1, y+1):
-                self.open_cell(i,j)
+        count = 0
+        for i in range(x - 1, x + 2):
+            if 0 <= i < len(self.mines):
+                for j in range(y - 1, y + 2):
+                    if 0 <= j < len(self.mines):
+                        b = self.open_cell(i, j)
+                        if b:
+                            count += 1
+        if count:
+            return True
+        return False
+
     
     # 싱글플레이 모드에서 게임을 끝낼때 부르는 함수
     # 모든 지뢰의 위치를 공개함
     # IMAGE_* 에 붙어있는 설명을 읽기 바람
     def finish_game(self):
-        x = 0
-        for i in self.mines:
-            y = 0
-            for j in i:
-                if j:
-                    self.images[x][y] = 4
-                y += 1
-            x += 1
+        for row in range(len(self.images)):
+            for col in range(len(self.images[row])):
+                if self.mines[row][col] and self.images[row][col] != IMAGE_BLOWN_UP_MINE and self.images[row][col] != IMAGE_FLAG:
+                    self.images[row][col] = IMAGE_MISSED_MINE
+                elif not self.mines[row][col] and self.images[row][col] == IMAGE_FLAG:
+                    self.images[row][col] = IMAGE_WRONG_FLAG
+        # for i, ii in self.images, self.mines:
+        #     for j, jj in i, ii:
+        #         if j == 0 and jj:
+
     
     # 남아있는 지뢰 개수를 셈 (잘못 표기한것도 포함)
     def count_remaining_mine(self):
