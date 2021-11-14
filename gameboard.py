@@ -128,13 +128,20 @@ class GameBoard:
     # 게임에서 승리했는지 확인 (게임이 끝났으면 True)
     # 지뢰인 칸을 제외하고 모든 칸을 열었을 때가 승리 조건임
     def check_finished(self):
-        raise NotImplementedError
+        for i in range(0, len(self.opened)):
+            for j in range(0, len(self.opened[i])):
+                if self.mines[i][j] == False and self.opened[i][j] == False:
+                    return False
+        return True
     
     # 해당 칸에 써있는 숫자를 가져옴
     # 아직 열리지 않은 칸일 경우 None
     # 열렸지만 주변에 지뢰가 없을 경우 0
     def get_cell_text(self, x: int, y: int):
-        raise NotImplementedError
+        if self.opened[y][x] == False:
+            return None
+        else:
+            return self.count_adjacent_mine(x,y)
     
     # 해당 칸의 이미지 정보를 가져옴
     # (cycle_cell_image 함수와 IMAGE_* 변수 참고)
