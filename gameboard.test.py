@@ -128,21 +128,16 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.count_flagged_mine(), 1)
     
     def test_check_finished(self):
+        self.game.cycle_cell_image(2, 2)
+        
         self.assertEqual(self.game.check_finished(), False)
-        self.assertEqual(self.game.open_cell_adjacent(4, 1), False)
+        self.assertEqual(self.game.open_cell(1, 0), False)
+        self.assertEqual(self.game.open_cell_adjacent(3, 1), False)
         self.assertEqual(self.game.open_cell_adjacent(5, 1), False)
-        self.assertEqual(self.game.open_cell_adjacent(5, 2), False)
-        for i in [3, 4]:
-            for j in [0, 1, 2, 3]:
-                self.assertEqual(self.game.open_cell(i, j), False)
-        self.assertEqual(self.game.check_finished(), False)
-        self.assertEqual(self.game.open_cell_adjacent(0, 1), False)
-        self.assertEqual(self.game.open_cell_adjacent(0, 2), False)
-        self.assertEqual(self.game.open_cell_adjacent(1, 0), False)
-        self.assertEqual(self.game.open_cell_adjacent(2, 0), False)
-        self.assertEqual(self.game.open_cell_adjacent(2, 1), False)
-        self.assertEqual(self.game.check_finished(), False)
-        self.assertEqual(self.game.open_cell_adjacent(1, 2), False)
+        for x in range(7):
+            for y in range(3, 5):
+                self.assertEqual(self.game.open_cell(x, y), False)
+        self.assertEqual(self.game.open_cell_adjacent(0, 2), True)
         self.assertEqual(self.game.check_finished(), True)
     
     def test_get_cell_text(self):
