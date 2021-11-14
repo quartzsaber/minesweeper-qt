@@ -49,6 +49,8 @@ class GameBoardTestCase(unittest.TestCase):
         
         self.game.images[2][2] = IMAGE_BLOWN_UP_MINE
         self.assertEqual(self.game.open_cell(2, 2), False)
+        
+        self.assertEqual(self.game.open_cell(6, 4), False)
     
     def test_open_cell_adjacent(self):
         self.game.cycle_cell_image(0, 0)
