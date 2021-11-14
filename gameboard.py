@@ -65,13 +65,13 @@ class GameBoard:
     # 열린 칸에 지뢰가 있었을 경우 True를 리턴하고 해당 칸의 이미지는 IMAGE_BLOWN_UP_MINE으로 바뀜
     # 단, 지뢰로 표시해놓은 칸은 무시
     def open_cell(self, x: int, y: int):
-        if not self.opened[x][y]:
-            if (self.images[x][y] == IMAGE_NONE or self.images[x][y] == IMAGE_QUESTION) and self.mines[x][y]:
-                self.images[x][y] = IMAGE_BLOWN_UP_MINE
+        if not self.opened[y][x]:
+            if (self.images[y][x] == IMAGE_NONE or self.images[y][x] == IMAGE_QUESTION) and self.mines[y][x]:
+                self.images[y][x] = IMAGE_BLOWN_UP_MINE
                 return True
-            elif (self.images[x][y] == IMAGE_NONE or self.images[x][y] == IMAGE_QUESTION) and not self.mines[x][y]:
-                for i, j in self.iter_empty_adjacent(x, y):
-                    self.opened[j][i] = True
+            elif (self.images[y][x] == IMAGE_NONE or self.images[y][x] == IMAGE_QUESTION) and not self.mines[y][x]:
+                for cx, cy in self.iter_empty_adjacent(x, y):
+                    self.opened[cy][cx] = True
         return False
     
     # 주변 3x3 칸을 엶
