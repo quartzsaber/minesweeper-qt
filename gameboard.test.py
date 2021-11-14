@@ -149,11 +149,12 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.get_cell_text(0, 1), 2)
         self.assertEqual(self.game.get_cell_text(0, 2), 1)
         self.assertEqual(self.game.get_cell_text(0, 3), 0)
-        
-        self.assertEqual(self.game.get_cell_text(1, 0), 2)
+
+        self.assertEqual(self.game.get_cell_text(1, 0), None)
         self.assertEqual(self.game.get_cell_text(2, 0), 1)
         self.assertEqual(self.game.get_cell_text(3, 0), 0)
         
+        self.game.open_cell(1, 1)
         self.assertEqual(self.game.get_cell_text(1, 1), 3)
     
     def test_count_adjacent_mine(self):
