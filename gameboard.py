@@ -152,6 +152,14 @@ class GameBoard:
     def get_playtime(self):
         return time.time() - self.start_time
     
+    # 게임판의 높이를 리턴함
+    def height(self):
+        return len(self.mines)
+    
+    # 게임판의 너비를 리턴함
+    def width(self):
+        return len(self.mines[0])
+    
     # ===========================================
     # 여기부터 아래에 있는 함수들은 이 클래스 내부에서 사용하기 위해 만들어진 함수임
     # ===========================================
