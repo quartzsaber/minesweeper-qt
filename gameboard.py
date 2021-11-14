@@ -133,7 +133,6 @@ class GameBoard:
     # 해당 칸에 써있는 숫자를 가져옴
     # 아직 열리지 않은 칸일 경우 None
     # 열렸지만 주변에 지뢰가 없을 경우 0
-    # 열렸지만 이미지가 표시중일때는 고려하지 않음 (어차피 이미지가 표시되어야 함)
     def get_cell_text(self, x: int, y: int):
         raise NotImplementedError
     
