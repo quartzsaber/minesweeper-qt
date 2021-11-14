@@ -6,182 +6,182 @@ from gameboard import *
 class GameBoardTestCase(unittest.TestCase):
     def setUp(self):
         self.game = GameBoard()
-        self.game.new_game(7, 5, 0)
+        self.game.newGame(7, 5, 0)
         self.game.mines[0][0] = True
         self.game.mines[1][1] = True
         self.game.mines[2][2] = True
-    
+
     def test_new_game(self):
-        self.game.new_game(7, 5, 3)
+        self.game.newGame(7, 5, 3)
         cnt = 0
         for i in range(len(self.game.mines)):
             for j in range(len(self.game.mines[i])):
                 if self.game.mines[i][j]:
                     cnt += 1
         self.assertEqual(cnt, 3)
-    
+
     def test_serialization(self):
-        self.assertEqual(type(self.game.serialize_game()), type(b''))
-        self.game.deserialize_game(self.game.serialize_game())
-    
+        self.assertEqual(type(self.game.serializeGame()), type(b''))
+        self.game.deserializeGame(self.game.serializeGame())
+
     def test_cycle_cell_image(self):
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_NONE)
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_QUESTION)
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_NONE)
-    
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_QUESTION)
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+
     def test_open_cell(self):
-        self.assertEqual(self.game.open_cell(0, 1), False)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_NONE)
-        self.assertEqual(self.game.open_cell(0, 0), True)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_BLOWN_UP_MINE)
-        self.assertEqual(self.game.open_cell(0, 0), False)
-        self.game.cycle_cell_image(1, 1)
-        self.assertEqual(self.game.open_cell(1, 1), False)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_FLAG)
-        self.game.cycle_cell_image(1, 1)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_QUESTION)
-        self.assertEqual(self.game.open_cell(1, 1), True)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_BLOWN_UP_MINE)
-        
+        self.assertEqual(self.game.openCell(0, 1), False)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+        self.assertEqual(self.game.openCell(0, 0), True)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_BLOWN_UP_MINE)
+        self.assertEqual(self.game.openCell(0, 0), False)
+        self.game.cycleCellImage(1, 1)
+        self.assertEqual(self.game.openCell(1, 1), False)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
+        self.game.cycleCellImage(1, 1)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_QUESTION)
+        self.assertEqual(self.game.openCell(1, 1), True)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_BLOWN_UP_MINE)
+
         self.game.images[2][2] = IMAGE_BLOWN_UP_MINE
-        self.assertEqual(self.game.open_cell(2, 2), False)
-        
-        self.assertEqual(self.game.open_cell(6, 4), False)
-    
+        self.assertEqual(self.game.openCell(2, 2), False)
+
+        self.assertEqual(self.game.openCell(6, 4), False)
+
     def test_open_cell_adjacent(self):
-        self.game.cycle_cell_image(0, 0)
-        self.game.cycle_cell_image(1, 1)
-        self.game.cycle_cell_image(2, 2)
-        self.assertEqual(self.game.open_cell_adjacent(1, 1), False)
-        self.assertEqual(self.game.open_cell_adjacent(0, 0), False)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_FLAG)
-        
-        self.game.cycle_cell_image(2, 2)
-        self.assertEqual(self.game.open_cell_adjacent(0, 0), False)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_QUESTION)
-        
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.open_cell_adjacent(1, 1), True)
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_BLOWN_UP_MINE)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_BLOWN_UP_MINE)
-        
-        self.game.open_cell_adjacent(4, 1)
+        self.game.cycleCellImage(0, 0)
+        self.game.cycleCellImage(1, 1)
+        self.game.cycleCellImage(2, 2)
+        self.assertEqual(self.game.openCellAdjacent(1, 1), False)
+        self.assertEqual(self.game.openCellAdjacent(0, 0), False)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_FLAG)
+
+        self.game.cycleCellImage(2, 2)
+        self.assertEqual(self.game.openCellAdjacent(0, 0), False)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_QUESTION)
+
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.openCellAdjacent(1, 1), True)
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_BLOWN_UP_MINE)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_BLOWN_UP_MINE)
+
+        self.game.openCellAdjacent(4, 1)
         for i in [3, 4, 5]:
             for j in [0, 1, 2]:
-                self.assertTrue(self.game.get_cell_text(i, j) >= 0)
-        self.assertTrue(self.game.get_cell_text(6, 0) == 0)
-        
-        self.assertEqual(self.game.open_cell_adjacent(6, 4), False)
-    
+                self.assertTrue(self.game.getCellText(i, j) >= 0)
+        self.assertTrue(self.game.getCellText(6, 0) == 0)
+
+        self.assertEqual(self.game.openCellAdjacent(6, 4), False)
+
     def test_finish_game(self):
         self.game.mines[3][3] = True
-        
-        self.game.cycle_cell_image(0, 0)
-        self.game.cycle_cell_image(0, 1)
-        self.game.cycle_cell_image(2, 2)
-        self.game.cycle_cell_image(2, 2)
-        
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(0, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_NONE)
-        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_QUESTION)
-        
-        self.assertEqual(self.game.open_cell(3, 3), True)
-        self.game.finish_game()
-        
-        self.assertEqual(self.game.get_cell_image(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.get_cell_image(0, 1), IMAGE_WRONG_FLAG)
-        self.assertEqual(self.game.get_cell_image(1, 1), IMAGE_MISSED_MINE)
-        self.assertEqual(self.game.get_cell_image(2, 2), IMAGE_MISSED_MINE)
-        self.assertEqual(self.game.get_cell_image(3, 3), IMAGE_BLOWN_UP_MINE)
-    
+
+        self.game.cycleCellImage(0, 0)
+        self.game.cycleCellImage(0, 1)
+        self.game.cycleCellImage(2, 2)
+        self.game.cycleCellImage(2, 2)
+
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(0, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_NONE)
+        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_QUESTION)
+
+        self.assertEqual(self.game.openCell(3, 3), True)
+        self.game.finishGame()
+
+        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(0, 1), IMAGE_WRONG_FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_MISSED_MINE)
+        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_MISSED_MINE)
+        self.assertEqual(self.game.getCellImage(3, 3), IMAGE_BLOWN_UP_MINE)
+
     def test_count_remaining_mine(self):
-        self.assertEqual(self.game.count_remaining_mine(), 3)
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.count_remaining_mine(), 2)
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.count_remaining_mine(), 3)
-        self.game.cycle_cell_image(0, 0)
-        self.game.cycle_cell_image(0, 0)
-        self.game.cycle_cell_image(0, 1)
-        self.assertEqual(self.game.count_remaining_mine(), 1)
-        self.game.cycle_cell_image(0, 2)
-        self.assertEqual(self.game.count_remaining_mine(), 0)
-        self.game.cycle_cell_image(0, 3)
-        self.assertEqual(self.game.count_remaining_mine(), -1)
-    
+        self.assertEqual(self.game.countRemainingMine(), 3)
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.countRemainingMine(), 2)
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.countRemainingMine(), 3)
+        self.game.cycleCellImage(0, 0)
+        self.game.cycleCellImage(0, 0)
+        self.game.cycleCellImage(0, 1)
+        self.assertEqual(self.game.countRemainingMine(), 1)
+        self.game.cycleCellImage(0, 2)
+        self.assertEqual(self.game.countRemainingMine(), 0)
+        self.game.cycleCellImage(0, 3)
+        self.assertEqual(self.game.countRemainingMine(), -1)
+
     def test_count_flagged_mine(self):
-        self.assertEqual(self.game.count_flagged_mine(), 0)
-        self.game.cycle_cell_image(0, 0)
-        self.game.cycle_cell_image(1, 1)
-        self.assertEqual(self.game.count_flagged_mine(), 2)
-        self.game.cycle_cell_image(0, 0)
-        self.assertEqual(self.game.count_flagged_mine(), 1)
-    
+        self.assertEqual(self.game.countFlaggedMine(), 0)
+        self.game.cycleCellImage(0, 0)
+        self.game.cycleCellImage(1, 1)
+        self.assertEqual(self.game.countFlaggedMine(), 2)
+        self.game.cycleCellImage(0, 0)
+        self.assertEqual(self.game.countFlaggedMine(), 1)
+
     def test_check_finished(self):
-        self.game.cycle_cell_image(2, 2)
-        
-        self.assertEqual(self.game.check_finished(), False)
-        self.assertEqual(self.game.open_cell(1, 0), False)
-        self.assertEqual(self.game.open_cell_adjacent(3, 1), False)
-        self.assertEqual(self.game.open_cell_adjacent(5, 1), False)
+        self.game.cycleCellImage(2, 2)
+
+        self.assertEqual(self.game.checkFinished(), False)
+        self.assertEqual(self.game.openCell(1, 0), False)
+        self.assertEqual(self.game.openCellAdjacent(3, 1), False)
+        self.assertEqual(self.game.openCellAdjacent(5, 1), False)
         for x in range(7):
             for y in range(3, 5):
-                self.assertEqual(self.game.open_cell(x, y), False)
-        self.assertEqual(self.game.open_cell_adjacent(0, 2), True)
-        self.assertEqual(self.game.check_finished(), True)
-    
-    def test_get_cell_text(self):
-        self.assertEqual(self.game.get_cell_text(0, 0), None)
-        self.assertEqual(self.game.get_cell_text(0, 1), None)
-        
-        self.game.open_cell(0, 1)
-        self.game.open_cell_adjacent(4, 1)
-        self.assertEqual(self.game.get_cell_text(0, 1), 2)
-        self.assertEqual(self.game.get_cell_text(0, 2), 1)
-        self.assertEqual(self.game.get_cell_text(0, 3), 0)
+                self.assertEqual(self.game.openCell(x, y), False)
+        self.assertEqual(self.game.openCellAdjacent(0, 2), True)
+        self.assertEqual(self.game.checkFinished(), True)
 
-        self.assertEqual(self.game.get_cell_text(1, 0), None)
-        self.assertEqual(self.game.get_cell_text(2, 0), 1)
-        self.assertEqual(self.game.get_cell_text(3, 0), 0)
-        
-        self.game.open_cell(1, 1)
-        self.assertEqual(self.game.get_cell_text(1, 1), 3)
-    
+    def test_get_cell_text(self):
+        self.assertEqual(self.game.getCellText(0, 0), None)
+        self.assertEqual(self.game.getCellText(0, 1), None)
+
+        self.game.openCell(0, 1)
+        self.game.openCellAdjacent(4, 1)
+        self.assertEqual(self.game.getCellText(0, 1), 2)
+        self.assertEqual(self.game.getCellText(0, 2), 1)
+        self.assertEqual(self.game.getCellText(0, 3), 0)
+
+        self.assertEqual(self.game.getCellText(1, 0), None)
+        self.assertEqual(self.game.getCellText(2, 0), 1)
+        self.assertEqual(self.game.getCellText(3, 0), 0)
+
+        self.game.openCell(1, 1)
+        self.assertEqual(self.game.getCellText(1, 1), 3)
+
     def test_count_adjacent_mine(self):
         self.game.mines[4][6] = True
-        
-        self.assertEqual(self.game.count_adjacent_mine(1, 1), 3)
-        self.assertEqual(self.game.count_adjacent_mine(0, 0), 2)
-        self.assertEqual(self.game.count_adjacent_mine(2, 2), 2)
-        self.assertEqual(self.game.count_adjacent_mine(3, 0), 0)
-        self.assertEqual(self.game.count_adjacent_mine(6, 4), 1)
-        self.assertEqual(self.game.count_adjacent_mine(5, 4), 1)
-        self.assertEqual(self.game.count_adjacent_mine(6, 3), 1)
-    
+
+        self.assertEqual(self.game.countAdjacentMines(1, 1), 3)
+        self.assertEqual(self.game.countAdjacentMines(0, 0), 2)
+        self.assertEqual(self.game.countAdjacentMines(2, 2), 2)
+        self.assertEqual(self.game.countAdjacentMines(3, 0), 0)
+        self.assertEqual(self.game.countAdjacentMines(6, 4), 1)
+        self.assertEqual(self.game.countAdjacentMines(5, 4), 1)
+        self.assertEqual(self.game.countAdjacentMines(6, 3), 1)
+
     def test_iter_empty_adjacent(self):
         self.game.mines[3][2] = True
         self.game.mines[4][2] = True
         self.game.mines[2][4] = True
         self.game.mines[2][5] = True
         self.game.mines[2][6] = True
-        
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 2)]), 1)
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 3)]), 6)
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(0, 0)]), 1)
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(2, 0)]), 1)
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(3, 0)]), 10)
-        self.assertEqual(sum([1 for x in self.game.iter_empty_adjacent(6, 4)]), 8)
-    
+
+        self.assertEqual(sum([1 for x in self.game.iterEmptyAdjacent(0, 2)]), 1)
+        self.assertEqual(sum([1 for x in self.game.iterEmptyAdjacent(0, 3)]), 6)
+        self.assertEqual(sum([1 for x in self.game.iterEmptyAdjacent(0, 0)]), 1)
+        self.assertEqual(sum([1 for x in self.game.iterEmptyAdjacent(2, 0)]), 1)
+        self.assertEqual(sum([1 for x in self.game.iterEmptyAdjacent(3, 0)]), 10)
+        self.assertEqual(sum([1 for x in self.game.iterEmptyAdjacent(6, 4)]), 8)
+
 
 if __name__ == '__main__':
     unittest.main()

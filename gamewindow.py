@@ -6,8 +6,8 @@ from gamewidget import GameWidget
 class GameWindow(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
-        
-        self.gamewidget = GameWidget()
-        
+
+        self.gameWidget = GameWidget()
+
         self.setWindowTitle('지뢰찾기')
-        self.setCentralWidget(self.gamewidget)
+        self.setCentralWidget(self.gameWidget)

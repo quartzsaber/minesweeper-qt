@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QToolButton
 
 from gameboard import IMAGE_NONE, IMAGE_FLAG, IMAGE_QUESTION, IMAGE_BLOWN_UP_MINE, IMAGE_MISSED_MINE, IMAGE_WRONG_FLAG
 
-
 STYLESHEET = '''
 CellWidget {
     background-color: #eeeeee;
@@ -30,9 +29,8 @@ CellWidget[colorize="8"] { color: #808080; }
 CellWidget[missed="yes"] { background-color: #ff0000; }
 '''
 
-
 # 숫자를 Unicode Full Width Character로 매핑해놓은 맵
-FULLWIDTH_MAP = {0: '０', 1: '１', 2: '２', 3: '３', 4: '４', 5: '５', 6: '６', 7: '７', 8: '８' }
+FULLWIDTH_MAP = {0: '０', 1: '１', 2: '２', 3: '３', 4: '４', 5: '５', 6: '６', 7: '７', 8: '８'}
 
 # 이미지 상수를 실제 이미지로 매핑해놓은 맵
 IMAGE_RESOURCE_MAP = {
@@ -45,7 +43,7 @@ IMAGE_RESOURCE_MAP = {
 }
 
 # 배경이 빨간색인 이미지들
-IMAGES_MISSED = { IMAGE_MISSED_MINE, IMAGE_WRONG_FLAG }
+IMAGES_MISSED = {IMAGE_MISSED_MINE, IMAGE_WRONG_FLAG}
 
 # 현재 버튼이 마우스에 의해 눌리고 있는지 여부
 PRESS_STATE_NONE = 0
@@ -55,40 +53,38 @@ PRESS_STATE_RIGHT = 3
 
 
 class CellWidget(QToolButton):
-    def __init__(self, gamewidget, x, y):
+    def __init__(self, gameWidget, x, y):
         super(QToolButton, self).__init__()
-        
+
         self.x = x
         self.y = y
-        self.gamewidget = gamewidget
+        self.gameWidget = gameWidget
         self.pressState = PRESS_STATE_NONE
-        
+
         self.setStyleSheet(STYLESHEET)
         self.updateDisplay()
-    
+
     def updateDown(self, newDown):
         if self.pressState == PRESS_STATE_LEFT:
             self.trySetDown(newDown)
         elif self.pressState == PRESS_STATE_MIDDLE:
             for i in range(-1, 2):
-                if 0 <= self.x + i < self.gamewidget.height():
+                if 0 <= self.x + i < self.gameWidget.height():
                     for j in range(-1, 2):
-                        if 0 <= self.y + j < self.gamewidget.width():
-                            self.gamewidget.getCell(self.x + i, self.y + j).trySetDown(newDown)
-    
+                        if 0 <= self.y + j < self.gameWidget.width():
+                            self.gameWidget.getCell(self.x + i, self.y + j).trySetDown(newDown)
+
     def trySetDown(self, newDown):
-        text = self.gamewidget.board.get_cell_text(self.x, self.y)
-        image = self.gamewidget.board.get_cell_image(self.x, self.y)
+        text = self.gameWidget.board.getCellText(self.x, self.y)
+        image = self.gameWidget.board.getCellImage(self.x, self.y)
         if text is None and image != IMAGE_FLAG:
             self.setDown(newDown)
-    
+
     def updateDisplay(self):
-        dirty = False
-        
-        image = self.gamewidget.board.get_cell_image(self.x, self.y)
-        text = self.gamewidget.board.get_cell_text(self.x, self.y)
+        image = self.gameWidget.board.getCellImage(self.x, self.y)
+        text = self.gameWidget.board.getCellText(self.x, self.y)
         opened = text is not None
-        
+
         if image == IMAGE_NONE:
             colorizeKey = text
             if text is None:
@@ -98,7 +94,7 @@ class CellWidget(QToolButton):
                 text = ''
             else:
                 text = FULLWIDTH_MAP[text]
-            
+
             self.setIcon(QIcon())
             self.setText(text)
             self.setProperty("colorize", str(colorizeKey))
@@ -109,19 +105,19 @@ class CellWidget(QToolButton):
             self.setText('')
             self.setProperty("colorize", "")
             self.setProperty("miss", "yes" if image in IMAGES_MISSED else "no")
-        
+
         self.setProperty("opened", "yes" if opened else "no")
         self.style().unpolish(self)
         self.ensurePolished()
-    
+
     def sizeHint(self):
         return QSize(24, 24)
-    
+
     def mousePressEvent(self, event):
         event.accept()
         if self.pressState != PRESS_STATE_NONE:
             return
-        
+
         if event.button() == Qt.LeftButton:
             self.pressState = PRESS_STATE_LEFT
             self.updateDown(True)
@@ -130,22 +126,22 @@ class CellWidget(QToolButton):
             self.updateDown(True)
         elif event.button() == Qt.RightButton:
             self.pressState = PRESS_STATE_RIGHT
-    
+
     # 이 위젯은 마우스 트래킹이 꺼져있기 때문에 마우스 버튼이 눌린 상태에서만 이 함수가 불림
     def mouseMoveEvent(self, event):
         event.accept()
         if self.pressState == PRESS_STATE_LEFT or self.pressState == PRESS_STATE_MIDDLE:
             self.updateDown(self.rect().contains(event.pos()))
-    
+
     def mouseReleaseEvent(self, event):
         event.accept()
         if self.rect().contains(event.pos()):
             if self.pressState == PRESS_STATE_LEFT:
-                self.gamewidget.board.open_cell(self.x, self.y)
+                self.gameWidget.board.openCell(self.x, self.y)
             elif self.pressState == PRESS_STATE_MIDDLE:
-                self.gamewidget.board.open_cell_adjacent(self.x, self.y)
+                self.gameWidget.board.openCellAdjacent(self.x, self.y)
             elif self.pressState == PRESS_STATE_RIGHT:
-                self.gamewidget.board.cycle_cell_image(self.x, self.y)
+                self.gameWidget.board.cycleCellImage(self.x, self.y)
         self.updateDown(False)
-        self.gamewidget.updateAll()
+        self.gameWidget.updateAll()
         self.pressState = PRESS_STATE_NONE
