@@ -103,9 +103,6 @@ class GameBoard:
                     self.images[row][col] = IMAGE_MISSED_MINE
                 elif not self.mines[row][col] and self.images[row][col] == IMAGE_FLAG:
                     self.images[row][col] = IMAGE_WRONG_FLAG
-        # for i, ii in self.images, self.mines:
-        #     for j, jj in i, ii:
-        #         if j == 0 and jj:
 
     # 남아있는 지뢰 개수를 셈 (잘못 표기한것도 포함)
     def countRemainingMine(self):
