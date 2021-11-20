@@ -114,14 +114,12 @@ class GameBoard:
             flagCount += i.count(True)
         return mineCount - flagCount
 
-    # 제대로 표기한 지뢰 개수를 셈
-    def countFlaggedMine(self):
-        count = 0
-        for i in range(0, len(self.images)):
-            for j in range(0, len(self.images[i])):
-                if self.images[i][j] == IMAGE_FLAG and self.mines[i][j]:
-                    count += 1
-        return count
+    # 지뢰의 총 개수를 셈
+    def countMine(self):
+        cnt = 0
+        for row in self.mines:
+            cnt += row.count(True)
+        return cnt
 
     # 게임에서 승리했는지 확인 (게임이 끝났으면 True)
     # 지뢰인 칸을 제외하고 모든 칸을 열었을 때가 승리 조건임

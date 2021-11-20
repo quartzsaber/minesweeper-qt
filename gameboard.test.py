@@ -119,13 +119,13 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycleCellImage(0, 3)
         self.assertEqual(self.game.countRemainingMine(), -1)
 
-    def test_count_flagged_mine(self):
-        self.assertEqual(self.game.countFlaggedMine(), 0)
+    def test_count_mine(self):
+        self.assertEqual(self.game.countMine(), 3)
         self.game.cycleCellImage(0, 0)
         self.game.cycleCellImage(1, 1)
-        self.assertEqual(self.game.countFlaggedMine(), 2)
+        self.assertEqual(self.game.countMine(), 3)
         self.game.cycleCellImage(0, 0)
-        self.assertEqual(self.game.countFlaggedMine(), 1)
+        self.assertEqual(self.game.countMine(), 3)
 
     def test_check_finished(self):
         self.game.cycleCellImage(2, 2)
