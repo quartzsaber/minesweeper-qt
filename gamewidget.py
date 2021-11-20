@@ -1,15 +1,19 @@
-from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QFrame, QGridLayout
 
 from gameboard import GameBoard
 from cellwidget import CellWidget
 
 
-class GameWidget(QWidget):
-    def __init__(self):
-        super(QWidget, self).__init__()
+class GameWidget(QFrame):
+    refreshBoard = pyqtSignal()
+
+    def __init__(self, width: int, height: int, mines: int):
+        super(QFrame, self).__init__()
+        self.setFrameShadow(QFrame.Panel | QFrame.Sunken)
 
         self.board = GameBoard()
-        self.board.newGame(9, 9, 10)
+        self.board.newGame(width, height, mines)
 
         self.cells = []
         self.gridLayout = QGridLayout()
@@ -26,6 +30,7 @@ class GameWidget(QWidget):
         for row in self.cells:
             for cell in row:
                 cell.updateDisplay()
+        self.refreshBoard.emit()
 
     def getCell(self, x, y):
         return self.cells[y][x]
