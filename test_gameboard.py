@@ -11,7 +11,7 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.mines[1][1] = True
         self.game.mines[2][2] = True
 
-    def test_new_game(self):
+    def test_newGame(self):
         self.game.newGame(7, 5, 3)
         cnt = 0
         for i in range(len(self.game.mines)):
@@ -24,7 +24,7 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(type(self.game.serializeGame()), type(b''))
         self.game.deserializeGame(self.game.serializeGame())
 
-    def test_cycle_cell_image(self):
+    def test_cycleCellImage(self):
         self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
         self.game.cycleCellImage(0, 0)
         self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
@@ -33,7 +33,7 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycleCellImage(0, 0)
         self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
 
-    def test_open_cell(self):
+    def test_openCell(self):
         self.assertEqual(self.game.openCell(0, 1), False)
         self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
         self.assertEqual(self.game.openCell(0, 0), True)
@@ -52,7 +52,7 @@ class GameBoardTestCase(unittest.TestCase):
 
         self.assertEqual(self.game.openCell(6, 4), False)
 
-    def test_open_cell_adjacent(self):
+    def test_openCellAdjacent(self):
         self.game.cycleCellImage(0, 0)
         self.game.cycleCellImage(1, 1)
         self.game.cycleCellImage(2, 2)
@@ -82,7 +82,7 @@ class GameBoardTestCase(unittest.TestCase):
 
         self.assertEqual(self.game.openCellAdjacent(6, 4), False)
 
-    def test_finish_game(self):
+    def test_finishGame(self):
         self.game.mines[3][3] = True
 
         self.game.cycleCellImage(0, 0)
@@ -104,7 +104,7 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.getCellImage(2, 2), IMAGE_MISSED_MINE)
         self.assertEqual(self.game.getCellImage(3, 3), IMAGE_BLOWN_UP_MINE)
 
-    def test_count_remaining_mine(self):
+    def test_countRemainingMine(self):
         self.assertEqual(self.game.countRemainingMine(), 3)
         self.game.cycleCellImage(0, 0)
         self.assertEqual(self.game.countRemainingMine(), 2)
@@ -119,13 +119,15 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycleCellImage(0, 3)
         self.assertEqual(self.game.countRemainingMine(), -1)
 
-    def test_count_mine(self):
+    def test_countMine(self):
         self.assertEqual(self.game.countMine(), 3)
         self.game.cycleCellImage(0, 0)
         self.game.cycleCellImage(1, 1)
         self.assertEqual(self.game.countMine(), 3)
         self.game.cycleCellImage(0, 0)
         self.assertEqual(self.game.countMine(), 3)
+        self.game.mines[4][6] = True
+        self.assertEqual(self.game.countMine(), 4)
 
     def test_check_finished(self):
         self.game.cycleCellImage(2, 2)
