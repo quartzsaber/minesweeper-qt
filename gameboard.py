@@ -62,7 +62,8 @@ class GameBoard:
     # 해당 칸의 플래그 정보를 바꿈
     # 이미 열린 칸에 플래그를 표시하지 못하도록 바꿈
     def cycleCellImage(self, x: int, y: int):
-        self.images[y][x] = (self.images[y][x] + 1) % 3
+        if not self.opened[y][x]:
+            self.images[y][x] = (self.images[y][x] + 1) % 3
 
     # 해당 칸을 엶 (좌클릭 함)
     # 해당 칸은 열리고, 만약 빈 칸일 경우 그 주변 빈 칸도 같이 열림 (self.opened가 수정됨)
