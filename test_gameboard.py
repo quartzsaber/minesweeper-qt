@@ -32,6 +32,10 @@ class GameBoardTestCase(unittest.TestCase):
         self.assertEqual(self.game.getCellImage(0, 0), IMAGE_QUESTION)
         self.game.cycleCellImage(0, 0)
         self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+        
+        self.game.openCell(0, 1)
+        self.game.cycleCellImage(0,1)
+        self.assertEqual(self.game.getCellImage(0,1), IMAGE_NONE)
 
     def test_openCell(self):
         self.assertEqual(self.game.openCell(0, 1), False)

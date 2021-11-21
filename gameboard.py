@@ -60,6 +60,7 @@ class GameBoard:
         pass
 
     # 해당 칸의 플래그 정보를 바꿈
+    # 이미 열린 칸에 플래그를 표시하지 못하도록 바꿈
     def cycleCellImage(self, x: int, y: int):
         self.images[y][x] = (self.images[y][x] + 1) % 3
 
