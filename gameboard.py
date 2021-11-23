@@ -2,14 +2,8 @@ import time
 import random
 import pickle
 
+from constants import *
 from collections import deque
-
-IMAGE_NONE = 0  # 특별한 표시가 없음. 닫혔으면 닫힌 모습이, 열렸으면 숫자 혹은 빈칸이 나타남
-IMAGE_FLAG = 1  # 지뢰임을 나타내는 깃발
-IMAGE_QUESTION = 2  # 물음표 표시. cycle_cell_flag는 여기까지 3개의 이미지만 사용함
-IMAGE_BLOWN_UP_MINE = 3  # 폭발해버린 지뢰. 빨간 배경의 지뢰 모습
-IMAGE_MISSED_MINE = 4  # 싱글플레이 게임이 끝날때 나타나는, 미처 지뢰라고 표기하지 못했던 지뢰. 회색 배경의 지뢰 모습
-IMAGE_WRONG_FLAG = 5  # 싱글플레이 게임이 끝날때 나타나는, 지뢰가 아닌데 지뢰라고 표기한 곳. 빨간 배경의 깃발 모습
 
 
 # 지뢰찾기 게임판
@@ -35,7 +29,7 @@ class GameBoard:
             for j in range(w):
                 self.mines[i].append(False)
                 self.opened[i].append(False)
-                self.images[i].append(IMAGE_NONE)
+                self.images[i].append(ImageType.NONE)
 
         coords = [(x, y) for x in range(w) for y in range(h)]
         for x, y in random.sample(coords, k=mines):
@@ -70,11 +64,11 @@ class GameBoard:
     # 열린 칸에 지뢰가 있었을 경우 True를 리턴하고 해당 칸의 이미지는 IMAGE_BLOWN_UP_MINE으로 바뀜
     # 단, 지뢰로 표시해놓은 칸은 무시
     def openCell(self, x: int, y: int):
-        if not self.opened[y][x] and (self.images[y][x] == IMAGE_NONE or self.images[y][x] == IMAGE_QUESTION):
+        if not self.opened[y][x] and (self.images[y][x] == ImageType.NONE or self.images[y][x] == ImageType.QUESTION):
             for cx, cy in self.iterEmptyAdjacent(x, y):
                 self.opened[cy][cx] = True
             if self.mines[y][x]:
-                self.images[y][x] = IMAGE_BLOWN_UP_MINE
+                self.images[y][x] = ImageType.BLOWN_UP_MINE
                 return True
         return False
 
@@ -101,10 +95,10 @@ class GameBoard:
     def finishGame(self):
         for row in range(len(self.images)):
             for col in range(len(self.images[row])):
-                if self.mines[row][col] and self.images[row][col] not in {IMAGE_BLOWN_UP_MINE, IMAGE_FLAG}:
-                    self.images[row][col] = IMAGE_MISSED_MINE
-                elif not self.mines[row][col] and self.images[row][col] == IMAGE_FLAG:
-                    self.images[row][col] = IMAGE_WRONG_FLAG
+                if self.mines[row][col] and self.images[row][col] not in {ImageType.BLOWN_UP_MINE, ImageType.FLAG}:
+                    self.images[row][col] = ImageType.MISSED_MINE
+                elif not self.mines[row][col] and self.images[row][col] == ImageType.FLAG:
+                    self.images[row][col] = ImageType.WRONG_FLAG
 
     # 남아있는 지뢰 개수를 셈 (잘못 표기한것도 포함)
     def countRemainingMine(self):

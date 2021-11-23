@@ -25,33 +25,33 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.deserializeGame(self.game.serializeGame())
 
     def test_cycleCellImage(self):
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.NONE)
         self.game.cycleCellImage(0, 0)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.FLAG)
         self.game.cycleCellImage(0, 0)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_QUESTION)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.QUESTION)
         self.game.cycleCellImage(0, 0)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.NONE)
         
         self.game.openCell(0, 1)
         self.game.cycleCellImage(0,1)
-        self.assertEqual(self.game.getCellImage(0,1), IMAGE_NONE)
+        self.assertEqual(self.game.getCellImage(0,1), ImageType.NONE)
 
     def test_openCell(self):
         self.assertEqual(self.game.openCell(0, 1), False)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_NONE)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.NONE)
         self.assertEqual(self.game.openCell(0, 0), True)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_BLOWN_UP_MINE)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.BLOWN_UP_MINE)
         self.assertEqual(self.game.openCell(0, 0), False)
         self.game.cycleCellImage(1, 1)
         self.assertEqual(self.game.openCell(1, 1), False)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.FLAG)
         self.game.cycleCellImage(1, 1)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_QUESTION)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.QUESTION)
         self.assertEqual(self.game.openCell(1, 1), True)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_BLOWN_UP_MINE)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.BLOWN_UP_MINE)
 
-        self.game.images[2][2] = IMAGE_BLOWN_UP_MINE
+        self.game.images[2][2] = ImageType.BLOWN_UP_MINE
         self.assertEqual(self.game.openCell(2, 2), False)
 
         self.assertEqual(self.game.openCell(6, 4), False)
@@ -62,21 +62,21 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycleCellImage(2, 2)
         self.assertEqual(self.game.openCellAdjacent(1, 1), False)
         self.assertEqual(self.game.openCellAdjacent(0, 0), False)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_FLAG)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(2, 2), ImageType.FLAG)
 
         self.game.cycleCellImage(2, 2)
         self.assertEqual(self.game.openCellAdjacent(0, 0), False)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_QUESTION)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(2, 2), ImageType.QUESTION)
 
         self.game.cycleCellImage(0, 0)
         self.assertEqual(self.game.openCellAdjacent(1, 1), True)
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_BLOWN_UP_MINE)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_BLOWN_UP_MINE)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.BLOWN_UP_MINE)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(2, 2), ImageType.BLOWN_UP_MINE)
 
         self.game.openCellAdjacent(4, 1)
         for i in [3, 4, 5]:
@@ -94,19 +94,19 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycleCellImage(2, 2)
         self.game.cycleCellImage(2, 2)
 
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(0, 1), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_NONE)
-        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_QUESTION)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(0, 1), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.NONE)
+        self.assertEqual(self.game.getCellImage(2, 2), ImageType.QUESTION)
 
         self.assertEqual(self.game.openCell(3, 3), True)
         self.game.finishGame()
 
-        self.assertEqual(self.game.getCellImage(0, 0), IMAGE_FLAG)
-        self.assertEqual(self.game.getCellImage(0, 1), IMAGE_WRONG_FLAG)
-        self.assertEqual(self.game.getCellImage(1, 1), IMAGE_MISSED_MINE)
-        self.assertEqual(self.game.getCellImage(2, 2), IMAGE_MISSED_MINE)
-        self.assertEqual(self.game.getCellImage(3, 3), IMAGE_BLOWN_UP_MINE)
+        self.assertEqual(self.game.getCellImage(0, 0), ImageType.FLAG)
+        self.assertEqual(self.game.getCellImage(0, 1), ImageType.WRONG_FLAG)
+        self.assertEqual(self.game.getCellImage(1, 1), ImageType.MISSED_MINE)
+        self.assertEqual(self.game.getCellImage(2, 2), ImageType.MISSED_MINE)
+        self.assertEqual(self.game.getCellImage(3, 3), ImageType.BLOWN_UP_MINE)
 
     def test_countRemainingMine(self):
         self.assertEqual(self.game.countRemainingMine(), 3)
