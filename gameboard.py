@@ -1,4 +1,3 @@
-import time
 import random
 import pickle
 
@@ -14,7 +13,6 @@ class GameBoard:
         self.mines = [[]]  # 2차원 리스트, 지뢰인 칸은 True, 아니면 False
         self.opened = [[]]  # 2차원 리스트, 열린 칸은 True, 아니면 False
         self.images = [[]]  # 2차원 리스트, IMAGE_* 으로 각 칸을 표시함
-        self.startTime = 0  # 시작했을때의 시간. 파이썬에 내장된 time.time() 함수 참고
 
     # w x h 크기의 게임판을 만들고, mines개수의 지뢰를 랜덤하게 배치
     def newGame(self, w: int, h: int, mines: int):
@@ -35,8 +33,6 @@ class GameBoard:
         for x, y in random.sample(coords, k=mines):
             self.mines[y][x] = True
 
-        self.startTime = time.time()
-
     # pickle을 이용해 이 게임판을 문자열로 저장해 리턴
     def serializeGame(self):
         return pickle.dumps(self)
@@ -47,7 +43,6 @@ class GameBoard:
         self.mines = game.mines
         self.opened = game.opened
         self.images = game.images
-        self.startTime = game.startTime
 
     # gameaction에서 생성한 action을 적용시킴
     def doAction(self, action):
@@ -139,10 +134,6 @@ class GameBoard:
     # (cycle_cell_image 함수와 IMAGE_* 변수 참고)
     def getCellImage(self, x: int, y: int):
         return self.images[y][x]
-
-    # 게임을 시작하고 몇 초가 지났는지 리턴
-    def getPlaytime(self):
-        return time.time() - self.startTime
 
     # 게임판의 높이를 리턴함
     def height(self):

@@ -1,10 +1,12 @@
-from enum import IntEnum
+from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QToolButton
 
 from constants import *
+if TYPE_CHECKING:
+    from gamewidget import GameWidget
 
 STYLESHEET = '''
 CellWidget {
@@ -28,7 +30,7 @@ CellWidget[colorize="5"] { color: #800000; }
 CellWidget[colorize="6"] { color: #008080; }
 CellWidget[colorize="7"] { color: #000000; }
 CellWidget[colorize="8"] { color: #808080; }
-CellWidget[missed="yes"] { background-color: #ff0000; }
+CellWidget[missed="yes"] { background-color: #dd0000; }
 '''
 
 # 숫자를 Unicode Full Width Character로 매핑해놓은 맵
@@ -62,7 +64,7 @@ class CellWidget(QToolButton):
 
         self.x = x
         self.y = y
-        self.gameWidget = gameWidget
+        self.gameWidget = gameWidget  # type: GameWidget
         self.mouseState = MouseState.NONE
 
         self.setStyleSheet(STYLESHEET)
@@ -79,15 +81,19 @@ class CellWidget(QToolButton):
                             self.gameWidget.getCell(self.x + i, self.y + j).trySetDown(newDown)
 
     def trySetDown(self, newDown):
-        text = self.gameWidget.board.getCellText(self.x, self.y)
-        image = self.gameWidget.board.getCellImage(self.x, self.y)
+        text = self.gameWidget.client.getCellText(self.x, self.y)
+        image = self.gameWidget.client.getCellImage(self.x, self.y)
         if text is None and image != ImageType.FLAG:
             self.setDown(newDown)
+        else:
+            self.setDown(False)
 
     def updateDisplay(self):
-        image = self.gameWidget.board.getCellImage(self.x, self.y)
-        text = self.gameWidget.board.getCellText(self.x, self.y)
+        image = self.gameWidget.client.getCellImage(self.x, self.y)
+        text = self.gameWidget.client.getCellText(self.x, self.y)
         opened = text is not None
+
+        newProps = {}
 
         if image == ImageType.NONE:
             colorizeKey = text
@@ -101,25 +107,31 @@ class CellWidget(QToolButton):
 
             self.setIcon(QIcon())
             self.setText(text)
-            self.setProperty("colorize", str(colorizeKey))
-            self.setProperty("miss", "yes" if image in IMAGES_MISSED else "no")
+            newProps["colorize"] = str(colorizeKey)
+            newProps["missed"] = "no"
         else:
             imgPath = IMAGE_RESOURCE_MAP[image]
             self.setIcon(QIcon(f"resource/{imgPath}"))
             self.setText('')
-            self.setProperty("colorize", "")
-            self.setProperty("miss", "yes" if image in IMAGES_MISSED else "no")
+            newProps["colorize"] = ""
+            newProps["missed"] = "yes" if image in IMAGES_MISSED else "no"
 
-        self.setProperty("opened", "yes" if opened else "no")
-        self.style().unpolish(self)
-        self.ensurePolished()
+        newProps["opened"] = "yes" if opened else "no"
+
+        # Polishing은 시간이 오래 걸리므로 꼭 필요한 경우에만 진행
+        if any((self.property(k) != v for k, v in newProps.items())):
+            for k, v in newProps.items():
+                self.setProperty(k, v)
+
+            self.style().unpolish(self)
+            self.ensurePolished()
 
     def sizeHint(self):
         return QSize(24, 24)
 
     def mousePressEvent(self, event):
         event.accept()
-        if self.mouseState != MouseState.NONE:
+        if self.mouseState != MouseState.NONE or self.gameWidget.client.checkFinished():
             return
 
         if event.button() == Qt.LeftButton:
@@ -141,11 +153,10 @@ class CellWidget(QToolButton):
         event.accept()
         if self.rect().contains(event.pos()):
             if self.mouseState == MouseState.LEFT:
-                self.gameWidget.board.openCell(self.x, self.y)
+                self.gameWidget.client.openCell(self.x, self.y)
             elif self.mouseState == MouseState.MIDDLE:
-                self.gameWidget.board.openCellAdjacent(self.x, self.y)
+                self.gameWidget.client.openCellAdjacent(self.x, self.y)
             elif self.mouseState == MouseState.RIGHT:
-                self.gameWidget.board.cycleCellImage(self.x, self.y)
+                self.gameWidget.client.cycleCellImage(self.x, self.y)
         self.updateDown(False)
-        self.gameWidget.updateAll()
         self.mouseState = MouseState.NONE

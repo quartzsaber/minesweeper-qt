@@ -1,42 +1,70 @@
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QFrame, QGridLayout
+from typing import Optional
 
-from gameboard import GameBoard
+from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QFrame, QGridLayout, QWidget
+
 from cellwidget import CellWidget
+from serverrole import IServerRole
+from clientrole import IClientRole
+from integratedserver import IntegratedServer
 
 
 class GameWidget(QFrame):
-    refreshBoard = pyqtSignal()
+    refreshed = pyqtSignal()
+    rebuildLater = pyqtSignal()
+    refreshLater = pyqtSignal()
 
-    def __init__(self, width: int, height: int, mines: int):
+    def __init__(self):
         super(QFrame, self).__init__()
+        self.rebuildLater.connect(self.buildUi)
+        self.refreshLater.connect(self.updateUi)
+
         self.setFrameShadow(QFrame.Panel | QFrame.Sunken)
 
-        self.board = GameBoard()
-        self.board.newGame(width, height, mines)
+        integratedServer = IntegratedServer()
+        self.server = integratedServer  # type: Optional[IServerRole]
+        self.client = integratedServer  # type: IClientRole
 
+        self.server.newGame(9, 9, 10)
+        self.client.setRebuildCallback(lambda: self.rebuildLater.emit())
+        self.client.setRefreshCallback(lambda: self.refreshLater.emit())
+
+        self.buildUi()
+
+    @pyqtSlot()
+    def buildUi(self):
         self.cells = []
         self.gridLayout = QGridLayout()
         self.gridLayout.setSpacing(2)
-        for i in range(self.board.height()):
+        for i in range(self.client.height()):
             self.cells.append([])
-            for j in range(self.board.width()):
+            for j in range(self.client.width()):
                 self.cells[i].append(CellWidget(self, j, i))
                 self.gridLayout.addWidget(self.cells[i][j], i, j)
 
-        self.setLayout(self.gridLayout)
+        # 레이아웃을 다른 위젯으로 옮겨서 삭제함
+        if self.layout() is not None:
+            tmp = QWidget()
+            tmp.setLayout(self.layout())
 
-    def updateAll(self):
+        self.setLayout(self.gridLayout)
+        self.update()
+
+        self.refreshed.emit()
+
+    @pyqtSlot()
+    def updateUi(self):
         for row in self.cells:
             for cell in row:
                 cell.updateDisplay()
-        self.refreshBoard.emit()
+
+        self.refreshed.emit()
 
     def getCell(self, x, y):
         return self.cells[y][x]
 
     def height(self):
-        return self.board.height()
+        return self.client.height()
 
     def width(self):
-        return self.board.width()
+        return self.client.width()

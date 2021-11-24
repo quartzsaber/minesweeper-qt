@@ -36,17 +36,17 @@ class GameWindow(QMainWindow):
         if sys.platform == 'win32':
             self.setWindowFlags(self.windowFlags() | Qt.MSWindowsFixedSizeDialogHint)
 
-        self.gameWidget = GameWidget(9, 9, 10)
-        self.gameWidget.refreshBoard.connect(self.refreshScore)
+        self.gameWidget = GameWidget()
+        self.gameWidget.refreshed.connect(self.refreshScore)
         self.setWindowTitle('지뢰찾기')
         self.setFixedSize(0, 0)
 
         self.setupMenu()
-        self.setupUi()
+        self.buildUi()
 
         self.timeUpdatingTimer = QTimer()
         self.timeUpdatingTimer.timeout.connect(self.refreshTime)
-        self.timeUpdatingTimer.start(1000)
+        self.timeUpdatingTimer.start(250)
 
     def paintEvent(self, ev):
         super().paintEvent(ev)
@@ -80,7 +80,7 @@ class GameWindow(QMainWindow):
         action.setToolTip('다른 사람이 들어올 수 있게 방을 엽니다')
         action.triggered.connect(self.openServer)
 
-    def setupUi(self):
+    def buildUi(self):
         self.mainWidget = QWidget()
 
         self.scoreDisplay = QLCDNumber()
@@ -115,7 +115,6 @@ class GameWindow(QMainWindow):
 
         self.setCentralWidget(self.mainWidget)
 
-    @pyqtSlot()
     def customGame(self):
         dialog = QDialog(self)
         dialog.setSizeGripEnabled(False)
@@ -154,32 +153,26 @@ class GameWindow(QMainWindow):
 
         dialog.show()
 
-    @pyqtSlot()
     def resetGame(self):
-        self.newGame(self.gameWidget.width(), self.gameWidget.height(), self.gameWidget.board.countMine())
+        self.gameWidget.server.newGameSameConfig()
 
-    @pyqtSlot(int, int, int)
     def newGame(self, width: int, height: int, mines: int):
-        self.gameWidget = GameWidget(width, height, mines)
-        self.gameWidget.refreshBoard.connect(self.refreshScore)
-        self.setupUi()
+        self.gameWidget.server.newGame(width, height, mines)
 
-    @pyqtSlot()
     def joinServer(self):
         print('STUB: joinServer')
 
-    @pyqtSlot()
     def openServer(self):
         print('STUB: openServer')
 
     @pyqtSlot()
     def refreshScore(self):
-        self.scoreDisplay.display(self.gameWidget.board.countRemainingMine())
+        self.scoreDisplay.display(self.gameWidget.client.countRemainingMine())
         self.refreshTime()
 
     @pyqtSlot()
     def refreshTime(self):
-        s = int(self.gameWidget.board.getPlaytime())
+        s = int(self.gameWidget.client.getPlaytime())
         m = s // 60
         s %= 60
         if m > 99:
