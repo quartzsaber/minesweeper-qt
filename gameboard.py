@@ -62,6 +62,7 @@ class GameBoard:
         if not self.opened[y][x] and (self.images[y][x] == ImageType.NONE or self.images[y][x] == ImageType.QUESTION):
             for cx, cy in self.iterEmptyAdjacent(x, y):
                 self.opened[cy][cx] = True
+                self.images[cy][cx] = ImageType.NONE
             if self.mines[y][x]:
                 self.images[y][x] = ImageType.BLOWN_UP_MINE
                 return True
