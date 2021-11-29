@@ -34,6 +34,10 @@ class IClientRole(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def countMine(self) -> int:
+        pass
+
+    @abstractmethod
     def checkFinished(self) -> bool:
         pass
 

@@ -61,6 +61,9 @@ class IntegratedServer(IServerRole, IClientRole):
     def countRemainingMine(self) -> int:
         return self.board.countRemainingMine()
 
+    def countMine(self) -> int:
+        return self.board.countMine()
+
     def checkFinished(self) -> bool:
         return self.endTime >= 0
 
