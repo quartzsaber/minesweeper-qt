@@ -14,6 +14,12 @@ class GameBoard:
         self.opened = [[]]  # 2차원 리스트, 열린 칸은 True, 아니면 False
         self.images = [[]]  # 2차원 리스트, IMAGE_* 으로 각 칸을 표시함
 
+        self.actionMap = {
+            'openCell': self.openCell,
+            'openCellAdjacent': self.openCellAdjacent,
+            'cycleCellImage': self.cycleCellImage
+        }
+
     # w x h 크기의 게임판을 만들고, mines개수의 지뢰를 랜덤하게 배치
     def newGame(self, w: int, h: int, mines: int):
         self.mines = []
@@ -46,12 +52,10 @@ class GameBoard:
 
     # gameaction에서 생성한 action을 적용시킴
     def doAction(self, action):
-        funcMap = {'openCell': self.openCell, 'openCellAdjacent': self.openCellAdjacent,
-                   'cycleCellImage': self.cycleCellImage}
         act = action['action']
         x = action['x']
         y = action['y']
-        funcMap[act](x, y)
+        self.actionMap[act](x, y)
 
     # 해당 칸의 플래그 정보를 바꿈
     # 이미 열린 칸에 플래그를 표시하지 못하도록 바꿈
