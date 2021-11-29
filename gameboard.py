@@ -46,7 +46,12 @@ class GameBoard:
 
     # gameaction에서 생성한 action을 적용시킴
     def doAction(self, action):
-        pass
+        funcMap = {'openCell': self.openCell, 'openCellAdjacent': self.openCellAdjacent,
+                   'cycleCellImage': self.cycleCellImage}
+        act = action['action']
+        x = action['x']
+        y = action['y']
+        funcMap[act](x, y)
 
     # 해당 칸의 플래그 정보를 바꿈
     # 이미 열린 칸에 플래그를 표시하지 못하도록 바꿈
