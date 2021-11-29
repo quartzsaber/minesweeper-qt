@@ -154,16 +154,63 @@ class GameWindow(QMainWindow):
         dialog.show()
 
     def resetGame(self):
-        self.gameWidget.server.newGameSameConfig()
+        self.gameWidget.resetGame()
 
     def newGame(self, width: int, height: int, mines: int):
-        self.gameWidget.server.newGame(width, height, mines)
+        self.gameWidget.newGame(width, height, mines)
 
     def joinServer(self):
-        print('STUB: joinServer')
+        dialog = QDialog(self)
+        dialog.setSizeGripEnabled(False)
+        dialog.setWindowTitle('게임 참가')
+
+        if sys.platform == 'win32':
+            dialog.setWindowFlags(dialog.windowFlags() | Qt.MSWindowsFixedSizeDialogHint)
+
+        addrEdit = QLineEdit()
+        pinEdit = QLineEdit()
+
+        addrEdit.setPlaceholderText('127.0.0.1')
+        pinEdit.setPlaceholderText('0000')
+
+        btn = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+
+        layout = QGridLayout(dialog)
+        layout.addWidget(QLabel('IP 주소'), 1, 1)
+        layout.addWidget(QLabel('핀 번호'), 2, 1)
+        layout.addWidget(addrEdit, 1, 2)
+        layout.addWidget(pinEdit, 2, 2)
+        layout.addWidget(btn, 3, 1, 1, 2)
+
+        def onAccepted():
+            try:
+                addr = str(addrEdit.text())
+                if len(addr) == 0:
+                    addr = '127.0.0.1'
+
+                pin = int(pinEdit.text())
+                if pin <= 0 or pin > 9999:
+                    raise ValueError('Pin out of range')
+
+                self.gameWidget.joinServer(addr, pin)
+            except ValueError:
+                box = QMessageBox(self.window())
+                box.setWindowTitle('오류')
+                box.setIcon(QMessageBox.Critical)
+                box.setText('핀 번호는 0000 에서 9999 사이의 숫자입니다.')
+                box.setStandardButtons(QMessageBox.Close)
+                box.buttonClicked.connect(box.deleteLater)
+                box.show()
+            finally:
+                dialog.destroy()
+
+        btn.accepted.connect(onAccepted)
+        btn.rejected.connect(dialog.destroy)
+
+        dialog.show()
 
     def openServer(self):
-        print('STUB: openServer')
+        self.gameWidget.openServer()
 
     @pyqtSlot()
     def refreshScore(self):
