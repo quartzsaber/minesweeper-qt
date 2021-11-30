@@ -106,6 +106,7 @@ class GameBoard:
                     self.images[row][col] = ImageType.WRONG_FLAG
 
     # 남아있는 지뢰 개수를 셈 (잘못 표기한것도 포함)
+    # 잘못 눌러서 이미 폭발한 지뢰도 지뢰로 표기한 것으로 간주함
     def countRemainingMine(self):
         mineCount = 0
         flagCount = 0

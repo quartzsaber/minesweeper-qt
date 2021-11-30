@@ -123,6 +123,10 @@ class GameBoardTestCase(unittest.TestCase):
         self.game.cycleCellImage(0, 3)
         self.assertEqual(self.game.countRemainingMine(), -1)
 
+        self.game.cycleCellImage(0, 0)
+        self.game.openCell(0, 0)
+        self.assertEqual(self.game.countRemainingMine(), -1)
+
     def test_countMine(self):
         self.assertEqual(self.game.countMine(), 3)
         self.game.cycleCellImage(0, 0)
