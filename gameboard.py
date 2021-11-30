@@ -113,7 +113,7 @@ class GameBoard:
         for i in self.mines:
             mineCount += i.count(True)
         for i in self.images:
-            flagCount += i.count(True)
+            flagCount += i.count(ImageType.FLAG) + i.count(ImageType.BLOWN_UP_MINE)
         return mineCount - flagCount
 
     # 지뢰의 총 개수를 셈
