@@ -1,12 +1,14 @@
 import sys
+import os
 
 from PyQt5.QtCore import pyqtSlot, QTimer, Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QWidget, QLayout, QDialog, QGridLayout, QLabel, QMessageBox, QLineEdit, \
-    QDialogButtonBox, QFrame, QToolButton
-from PyQt5.QtWidgets import QLCDNumber
+from PyQt5.QtWidgets import QMainWindow, QWidget, QLayout, QDialog, QGridLayout
+from PyQt5.QtWidgets import QLabel, QMessageBox, QLineEdit, QDialogButtonBox
+from PyQt5.QtWidgets import QLCDNumber, QFrame, QToolButton
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
 
+from constants import RESOURCE_PATH
 from gamewidget import GameWidget
 
 
@@ -30,7 +32,7 @@ class GameWindow(QMainWindow):
     def __init__(self):
         super(QMainWindow, self).__init__()
 
-        self.mineIcon = QIcon('resource/image-mine.png')
+        self.mineIcon = QIcon(f'{RESOURCE_PATH}/image-mine.png')
         self.setWindowIcon(self.mineIcon)
 
         if sys.platform == 'win32':

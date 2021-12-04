@@ -1,6 +1,9 @@
 # 여러 모듈에서 사용되는 상수들을 모아두는 모듈
 # 특정 모듈에서만 사용되는 상수는 여기에 넣지 말 것
 
+import sys
+import os
+
 from enum import IntEnum
 
 
@@ -15,3 +18,5 @@ class ImageType(IntEnum):
 
 DEFAULT_PORT = 5995
 MAGIC_STRING = b'minesweeper-qt/1.0\n'
+
+RESOURCE_PATH = os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__))), 'resource')

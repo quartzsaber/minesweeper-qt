@@ -111,7 +111,7 @@ class CellWidget(QToolButton):
             newProps["missed"] = "no"
         else:
             imgPath = IMAGE_RESOURCE_MAP[image]
-            self.setIcon(QIcon(f"resource/{imgPath}"))
+            self.setIcon(QIcon(f"{RESOURCE_PATH}/{imgPath}"))
             self.setText('')
             newProps["colorize"] = ""
             newProps["missed"] = "yes" if image in IMAGES_MISSED else "no"
