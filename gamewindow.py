@@ -67,8 +67,8 @@ class GameWindow(QMainWindow):
         action.triggered.connect(lambda: self.newGame(16, 16, 40))
 
         action = menu.addAction('고급')
-        action.setToolTip('22x22에 지뢰 97개')
-        action.triggered.connect(lambda: self.newGame(22, 22, 97))
+        action.setToolTip('25x25에 지뢰 60개')
+        action.triggered.connect(lambda: self.newGame(25, 25, 60))
 
         action = menu.addAction('커스텀')
         action.triggered.connect(self.customGame)
