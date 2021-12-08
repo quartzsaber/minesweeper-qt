@@ -141,9 +141,9 @@ class GameWindow(QMainWindow):
 
         def onAccepted():
             try:
-                w = max(9, int(width.text()))
-                h = max(9, int(height.text()))
-                m = max(10, int(mines.text()))
+                w = min(25, max(9, int(width.text())))
+                h = min(25, max(9, int(height.text())))
+                m = min(w * h - 1, max(10, int(mines.text())))
                 self.newGame(w, h, m)
             except ValueError:
                 pass
